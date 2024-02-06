@@ -45,7 +45,11 @@
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="lineEdit"/>
+      <widget class="QPushButton" name="pushButton3">
+       <property name="text">
+        <string>Поиск</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
