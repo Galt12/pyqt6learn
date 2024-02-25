@@ -36,7 +36,7 @@ class Search(QDialog):
     def search(self):
         query = QSqlQueryModel()
         query.setQuery(
-                f"SELECT * FROM orders WHERE zakaz LIKE '%{self.search_input.text()}%'"
+            f"SELECT * FROM orders WHERE zakaz LIKE '%{self.search_input.text()}%'"
             # f"SELECT * FROM users JOIN buro ON users.id_buro = buro.id WHERE buro.name_buro LIKE '%{self.search_input.text()}%'"
             # f"SELECT * FROM orders "
         )

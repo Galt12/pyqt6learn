@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>745</width>
-    <height>181</height>
+    <height>238</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <x>10</x>
      <y>10</y>
      <width>460</width>
-     <height>168</height>
+     <height>197</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -65,6 +65,13 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Дата</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="layoutWidget">
@@ -84,6 +91,20 @@
         <item>
          <widget class="QLineEdit" name="lineEdit_5"/>
         </item>
+        <item>
+         <widget class="QDateEdit" name="dateEdit">
+          <property name="calendarPopup">
+           <bool>true</bool>
+          </property>
+          <property name="date">
+           <date>
+            <year>2000</year>
+            <month>1</month>
+            <day>6</day>
+           </date>
+          </property>
+         </widget>
+        </item>
        </layout>
       </widget>
      </widget>
@@ -91,21 +112,46 @@
     <item>
      <widget class="QPushButton" name="pushButton">
       <property name="text">
-       <string>PushButton</string>
+       <string>Добавить работы</string>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
-  <widget class="QLineEdit" name="sumtrud">
+  <widget class="QPushButton" name="show_work_button">
    <property name="geometry">
     <rect>
-     <x>540</x>
-     <y>20</y>
-     <width>113</width>
-     <height>22</height>
+     <x>580</x>
+     <y>180</y>
+     <width>151</width>
+     <height>23</height>
     </rect>
    </property>
+   <property name="text">
+    <string>Посмотреть работы</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>620</x>
+     <y>0</y>
+     <width>127</width>
+     <height>44</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <item>
+     <widget class="QLineEdit" name="sumtrud"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

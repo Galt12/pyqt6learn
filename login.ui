@@ -17,9 +17,12 @@
    <item>
     <widget class="QLineEdit" name="login_line">
      <property name="inputMask">
-      <string>Логин</string>
+      <string/>
      </property>
      <property name="text">
+      <string/>
+     </property>
+     <property name="placeholderText">
       <string>Логин</string>
      </property>
     </widget>
@@ -27,6 +30,12 @@
    <item>
     <widget class="QLineEdit" name="pass_line">
      <property name="text">
+      <string/>
+     </property>
+     <property name="echoMode">
+      <enum>QLineEdit::Password</enum>
+     </property>
+     <property name="placeholderText">
       <string>Пароль</string>
      </property>
     </widget>

@@ -1,27 +1,28 @@
-import sys
-from PyQt6.QtWidgets import QApplication, QMainWindow, QDialog, QPushButton
+import sqlite3
+from PyQt6.QtSql import QSqlDatabase, QSqlQuery
 
-class MainWindow(QMainWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Main Window")
-        self.setGeometry(100, 100, 400, 300)
 
-class Dialog(QDialog):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Dialog")
-        self.setGeometry(200, 200, 200, 100)
+def check_buro():
+    db = QSqlDatabase.addDatabase("QSQLITE")
+    db.setDatabaseName("table.db")
+    if not db.open():
+        print("Не удалось открыть базу данных")
+        return
 
-        button = QPushButton("Open Main Window", self)
-        button.clicked.connect(self.open_main_window)
+    query = QSqlQuery()
+    query.prepare("SELECT DISTINCT name_buro FROM buro")
+    if not query.exec():
+        print("Ошибка выполнения запроса")
+        return
 
-    def open_main_window(self):
-        main_window = MainWindow()
-        main_window.show()
+    while query.next():
+        name_buro = query.value(0)
+        print(name_buro)
+    #     self.list_buro.addItem(name_buro)
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    dialog = Dialog()
-    dialog.show()
-    sys.exit(app.exec())
+    db.close()
+
+    print(name_buro)
+
+
+check_buro()

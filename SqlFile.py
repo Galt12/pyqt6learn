@@ -52,15 +52,32 @@ def add_items(value):
     conn = sqlite3.connect("table.db")
     cur = conn.cursor()
     cur.execute(
-        "INSERT INTO orders (zakaz, izdelie, lz_izv, number_lz, kol_list) VALUES (?,?,?,?,?)",
+        """INSERT INTO orders (
+            zakaz, izdelie, lz_izv, number_lz, kol_list, id_user, date)
+            VALUES (?,?,?,?,?,?,?)""",
         value,
     )
     conn.commit()
     conn.close()
 
 
-# if __name__ == '__main__':
-#     # create_table_buro()
-#     # create_table_user()
-#     # insert_user('test', 123456, 1)
-#     insert_buro('Бюро разрботки программ ЧПУ')
+def add_user(user_info):
+    conn = sqlite3.connect("table.db")
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO users (name, password, id_buro) VALUES (?,?,?)",
+        (user_info)
+    )
+    conn.commit()
+    conn.close()
+
+def add_date():
+    conn = sqlite3.connect("table.db")
+    cur = conn.cursor()
+    cur.execute(
+        """ALTER TABLE orders
+        ADD COLUMN  date DATE;""")
+
+    conn.commit()
+    conn.close()
+
