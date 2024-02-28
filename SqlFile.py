@@ -53,8 +53,8 @@ def add_items(value):
     cur = conn.cursor()
     cur.execute(
         """INSERT INTO orders (
-            zakaz, izdelie, lz_izv, number_lz, kol_list, id_user, date)
-            VALUES (?,?,?,?,?,?,?)""",
+            zakaz, izdelie, lz_izv, number_lz, kol_list, id_user, date, id_works)
+            VALUES (?,?,?,?,?,?,?,?)""",
         value,
     )
     conn.commit()
@@ -66,17 +66,32 @@ def add_user(user_info):
     cur = conn.cursor()
     cur.execute(
         "INSERT INTO users (name, password, id_buro) VALUES (?,?,?)",
-        (user_info)
+        (user_info),
     )
     conn.commit()
     conn.close()
+
 
 def add_date():
     conn = sqlite3.connect("table.db")
     cur = conn.cursor()
     cur.execute(
         """ALTER TABLE orders
-        ADD COLUMN  date DATE;""")
+        ADD COLUMN  date DATE;"""
+    )
+
+    conn.commit()
+    conn.close()
+
+
+def info():
+    conn = sqlite3.connect("table.db")
+    cur = conn.cursor()
+    cur.execute(
+        """SELECT DATA_TYPE 
+        FROM INFORMATION_SCHEMA.COLUMNS 
+        WHERE TABLE_NAME = 'orders' AND COLUMN_NAME = 'date'"""
+    )
 
     conn.commit()
     conn.close()
