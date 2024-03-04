@@ -65,7 +65,7 @@ def add_user(user_info):
     conn = sqlite3.connect("table.db")
     cur = conn.cursor()
     cur.execute(
-        "INSERT INTO users (name, password, id_buro) VALUES (?,?,?)",
+        "INSERT INTO users (name, password, id_buro, role) VALUES (?,?,?,'user')",
         (user_info),
     )
     conn.commit()

@@ -4,24 +4,23 @@ from PyQt6.QtWidgets import (
     QDialog,
     QMessageBox,
     QApplication,
-    QTableWidgetItem,
-    QMainWindow,
 )
 from PyQt6.uic import loadUi
-from SqlFile import add_items, add_user
+from SqlFile import add_user
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery
-from main import AddNewOrder, TableView
+from user_frame import AddNewOrder
+from admin_panel import Admin_frame
 
 
 class Login(QDialog):
     def __init__(self, parent=None):
         super(Login, self).__init__(parent)
-        loadUi("login.ui", self)
+        loadUi("UI_static/login.ui", self)
         self.setWindowTitle("Логин")
         self.enter_Button.clicked.connect(self.login)
         self.reg_Button_2.clicked.connect(self.registration)
         self.base_line_edit = [self.login_line, self.pass_line]
-
+        
     def login(self):
         name = self.login_line.text()
         passw = self.pass_line.text()
@@ -30,18 +29,22 @@ class Login(QDialog):
 
         cur.execute("SELECT * FROM users WHERE name = ?;", (name,))
         value = cur.fetchall()
+        print(value[0][4])
         if value and value[0][2] == passw:
+            role = value[0][4]
+            if role == 'user':
+                enter = AddNewOrder(name)
+                enter.exec()
+            elif role == 'admin':
+                enter = Admin_frame()
+                enter.exec()
+
             Login.close(self)
-            enter = AddNewOrder(name)
-            enter.exec()
         else:
             QMessageBox.warning(self, "Ошибка вышла")
 
         cur.close()
         con.close()
-
-    def user_login(self):
-        return self.login_line.text()
 
     def registration(self):
         Login.close(self)
@@ -52,7 +55,7 @@ class Login(QDialog):
 class Registration(QDialog):
     def __init__(self, parent=None):
         super(Registration, self).__init__(parent)
-        loadUi("registration.ui", self)
+        loadUi("UI_static/registration.ui", self)
         self.setWindowTitle("Регистрация")
         buro_name = self.check_buro()
         for name_buro in buro_name:
