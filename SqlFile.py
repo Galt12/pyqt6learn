@@ -88,11 +88,10 @@ def info():
     conn = sqlite3.connect("table.db")
     cur = conn.cursor()
     cur.execute(
-        """SELECT DATA_TYPE 
-        FROM INFORMATION_SCHEMA.COLUMNS 
+        """SELECT DATA_TYPE
+        FROM INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_NAME = 'orders' AND COLUMN_NAME = 'date'"""
     )
 
     conn.commit()
     conn.close()
-

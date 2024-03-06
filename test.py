@@ -1,5 +1,6 @@
 import sqlite3
 
+
 def add_date():
     conn = sqlite3.connect("table.db")
     cur = conn.cursor()

@@ -20,7 +20,7 @@ class Login(QDialog):
         self.enter_Button.clicked.connect(self.login)
         self.reg_Button_2.clicked.connect(self.registration)
         self.base_line_edit = [self.login_line, self.pass_line]
-        
+
     def login(self):
         name = self.login_line.text()
         passw = self.pass_line.text()
@@ -32,10 +32,10 @@ class Login(QDialog):
         print(value[0][4])
         if value and value[0][2] == passw:
             role = value[0][4]
-            if role == 'user':
+            if role == "user":
                 enter = AddNewOrder(name)
                 enter.exec()
-            elif role == 'admin':
+            elif role == "admin":
                 enter = Admin_frame()
                 enter.exec()
 
@@ -115,11 +115,11 @@ class Registration(QDialog):
             conn.commit()
             conn.close()
 
-        user_info = [login, password, id_buro]
-        add_user(user_info)
-        Registration.close(self)
-        enter = Login()
-        enter.exec()
+            user_info = [login, password, id_buro]
+            add_user(user_info)
+            Registration.close(self)
+            enter = Login()
+            enter.exec()
 
 
 if __name__ == "__main__":

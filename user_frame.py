@@ -2,11 +2,12 @@ import sqlite3
 from PyQt6.QtWidgets import (
     QDialog,
     QMessageBox,
-    QTableWidgetItem, QInputDialog,
+    QTableWidgetItem,
 )
 from PyQt6.uic import loadUi
 from SqlFile import add_items
 from PyQt6.QtCore import QDate
+
 
 class AddNewOrder(QDialog):
     """
@@ -96,7 +97,7 @@ class AddNewOrder(QDialog):
         number_lz = self.lineEdit_4.text()
         kol_lista = self.lineEdit_5.text()
         user = self.label_6.text()
-        
+
         conn = sqlite3.connect("table.db")
         cur = conn.cursor()
         cur.execute("SELECT id FROM users WHERE name = ?", (user,))
@@ -152,7 +153,9 @@ class AddNewOrder(QDialog):
 
                 id_user = result[0]
 
-                cur.execute("SELECT SUM(kol_list) FROM orders WHERE id_user = ? ", (id_user,))
+                cur.execute(
+                    "SELECT SUM(kol_list) FROM orders WHERE id_user = ? ", (id_user,)
+                )
                 result = cur.fetchone()[0]
                 self.sumtrud.setText(str(result))
                 self.sumtrud.setReadOnly(True)
@@ -177,8 +180,12 @@ class TableView(QDialog):
         self.show_works_for_id(first_day, last_day)
 
     def get_first_and_last_day_of_month(self):
-        first_day = self.date.addDays(-self.date.day() + 1)  # Получаем первый день месяца
-        last_day = self.date.addDays(-self.date.day()).addMonths(1).addDays(-1)  # Получаем последний день месяца
+        first_day = self.date.addDays(
+            -self.date.day() + 1
+        )  # Получаем первый день месяца
+        last_day = (
+            self.date.addDays(-self.date.day()).addMonths(1).addDays(-1)
+        )  # Получаем последний день месяца
 
         return first_day, last_day
 
@@ -202,7 +209,11 @@ class TableView(QDialog):
             WHERE orders.id_user = ?
             AND orders.date BETWEEN ? AND ?
             """,
-            (id_user, first_day.toString("yyyy-MM-dd"), last_day.toString("yyyy-MM-dd"))
+            (
+                id_user,
+                first_day.toString("yyyy-MM-dd"),
+                last_day.toString("yyyy-MM-dd"),
+            ),
         )
 
         rows = list(results)
@@ -210,23 +221,18 @@ class TableView(QDialog):
         self.tableWidget.setRowCount(len(rows))
         for tablerow, row in enumerate(rows):
             for column, value in enumerate(row):
-                self.tableWidget.setItem(
-                    tablerow, column, QTableWidgetItem(str(value)))
+                self.tableWidget.setItem(tablerow, column, QTableWidgetItem(str(value)))
         conn.close()
 
     def open_table(self):
         conn = sqlite3.connect("table.db")
         cur = conn.cursor()
-        sqlstr = (
-            "SELECT zakaz, izdelie, lz_izv, number_lz, kol_list FROM orders"
-        )
+        sqlstr = "SELECT zakaz, izdelie, lz_izv, number_lz, kol_list FROM orders"
 
         results = cur.execute(sqlstr)
         rows = list(results)
         self.tableWidget.setRowCount(len(rows))
         for tablerow, row in enumerate(rows):
             for column, value in enumerate(row):
-                self.tableWidget.setItem(
-                    tablerow, column, QTableWidgetItem(str(value))
-                )
+                self.tableWidget.setItem(tablerow, column, QTableWidgetItem(str(value)))
         conn.close()

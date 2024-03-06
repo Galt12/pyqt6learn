@@ -1,21 +1,13 @@
 import sys
-import sqlite3
+
 from PyQt6.QtWidgets import (
-    QDialog,
-    QMessageBox,
     QApplication,
-    QTableWidgetItem,
     QMainWindow,
 )
 from PyQt6.uic import loadUi
-from SqlFile import add_items, add_user
-from PyQt6.QtSql import QSqlDatabase, QSqlQuery
-from search import Search
-from PyQt6.QtCore import QDate, QCalendar
-from datetime import datetime
 from login import Login, Registration
-from user_frame import AddNewOrder, TableView
 from admin_panel import Admin_frame
+
 
 class MainWindow(QMainWindow):
     """
