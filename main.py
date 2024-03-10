@@ -18,7 +18,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__(parent)
         loadUi("UI_static/mainwin.ui", self)
         self.login_btn.clicked.connect(self.login)
-        # self.login()
+        self.login()
         self.show_work.clicked.connect(self.add_work)
         self.pushButton_3.clicked.connect(self.registration)
 
@@ -32,10 +32,18 @@ class MainWindow(QMainWindow):
         self.stackedWidget.addWidget(login)
         self.stackedWidget.setCurrentWidget(login)
 
+    # def update_status_bar(self, message)
+    #     self.statusBar().showMessage(message)
+
+
     def add_work(self):
         add_work = Admin_frame()
         self.stackedWidget.addWidget(add_work)
         self.stackedWidget.setCurrentWidget(add_work)
+
+    def enter_to_prog(self):
+        self.stackedWidget.addWidget(Admin_frame)
+        self.stackedWidget.setCurrentWidget(Admin_frame)
 
 
 if __name__ == "__main__":

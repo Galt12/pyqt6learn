@@ -1,14 +1,10 @@
-import sqlite3
+def two(x, y):
+    return (x, y)
 
 
-def add_date():
-    conn = sqlite3.connect("table.db")
-    cur = conn.cursor()
-    cur.execute(
-        """SELECT date 
-        FROM orders
-        """
-    )
+def one():
+    x, y = two(2, 3)
+    print(x, y, x + y)
 
-    conn.commit()
-    conn.close()
+
+one()

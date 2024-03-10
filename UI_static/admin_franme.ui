@@ -10,6 +10,12 @@
     <height>635</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <pointsize>14</pointsize>
+    <italic>true</italic>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
@@ -18,8 +24,8 @@
     <rect>
      <x>260</x>
      <y>10</y>
-     <width>354</width>
-     <height>25</height>
+     <width>381</width>
+     <height>32</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -74,7 +80,7 @@ QPushButton:checked {
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_3">
+     <widget class="QPushButton" name="test_buro2">
       <property name="text">
        <string>PushButton</string>
       </property>
@@ -85,14 +91,14 @@ QPushButton:checked {
   <widget class="QPushButton" name="pushButton_4">
    <property name="geometry">
     <rect>
-     <x>720</x>
+     <x>650</x>
      <y>590</y>
-     <width>141</width>
+     <width>211</width>
      <height>23</height>
     </rect>
    </property>
    <property name="text">
-    <string>Обновить </string>
+    <string>Обновить данные в таблице</string>
    </property>
   </widget>
   <widget class="QTableWidget" name="tableWidget">
@@ -140,7 +146,7 @@ QPushButton:checked {
     <rect>
      <x>11</x>
      <y>51</y>
-     <width>451</width>
+     <width>681</width>
      <height>220</height>
     </rect>
    </property>
@@ -211,7 +217,7 @@ QPushButton:checked {
         <widget class="QLineEdit" name="lineEdit_2"/>
        </item>
        <item>
-        <widget class="QComboBox" name="type_works"/>
+        <widget class="QComboBox" name="type_buro"/>
        </item>
        <item>
         <widget class="QLineEdit" name="lineEdit_4"/>
@@ -223,7 +229,53 @@ QPushButton:checked {
         <widget class="QLineEdit" name="lineEdit_5"/>
        </item>
        <item>
-        <widget class="QDateEdit" name="dateEdit">
+        <widget class="QDateEdit" name="startdate">
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+         <property name="date">
+          <date>
+           <year>2000</year>
+           <month>1</month>
+           <day>6</day>
+          </date>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_10">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_12">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDateEdit" name="end_date">
          <property name="calendarPopup">
           <bool>true</bool>
          </property>
@@ -255,9 +307,9 @@ QPushButton:checked {
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_3">
+        <widget class="QCheckBox" name="name_buro">
          <property name="text">
-          <string>CheckBox</string>
+          <string>Бюро</string>
          </property>
         </widget>
        </item>
@@ -298,6 +350,32 @@ QPushButton:checked {
      <string> Сформировать отчет</string>
     </property>
    </widget>
+  </widget>
+  <widget class="QLabel" name="TOTAL">
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>590</y>
+     <width>131</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>ИТОГО</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="sum_trud">
+   <property name="geometry">
+    <rect>
+     <x>380</x>
+     <y>590</y>
+     <width>58</width>
+     <height>15</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
   </widget>
  </widget>
  <resources/>
