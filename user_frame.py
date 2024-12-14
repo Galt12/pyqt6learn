@@ -1,6 +1,7 @@
 import sqlite3
 from PyQt6.QtWidgets import (
     QDialog,
+    QWidget,
     QMessageBox,
     QTableWidgetItem,
 )
@@ -163,11 +164,11 @@ class AddNewOrder(QDialog):
 class TableView(QDialog):
     """Основной класс для отчета за месяца"""
 
-    def __init__(self, user, parent=None):
+    def __init__(self, login_name, parent=None):
         super(TableView, self).__init__(parent)
         loadUi("UI_static/table_all.ui", self)
         self.setWindowTitle("Список дел за месяц")
-        self.name = user
+        self.name = login_name
         self.date = QDate.currentDate()
         first_day, last_day = self.get_first_and_last_day_of_month()
         self.show_works_for_id(first_day, last_day)

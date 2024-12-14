@@ -1,4 +1,3 @@
-
 import sqlite3
 
 
@@ -49,12 +48,14 @@ def add_user(user_info):
     conn.close()
 
 
-def fetch_user_id(name):
+def fetch_user_id(login_name):
     """Получение id пользователя"""
     with sqlite3.connect("table.db") as conn:
         cur = conn.cursor()
-        cur.execute("SELECT id FROM users WHERE name = ?", (name,))
+        cur.execute("SELECT id FROM users WHERE name = ?", (login_name,))
         result = cur.fetchone()
+        
+
     return result[0] if result else None
 
 
@@ -74,6 +75,7 @@ def fetch_orders_for_user_between_dates(user_id, start_date, end_date):
         rows = list(results)
     return rows
 
+
 def fetch_orders_for_monts(start_date, end_date):
     """Получаем значения из таблицы работ, с учетом id и диапазона дат"""
     with sqlite3.connect("table.db") as conn:
@@ -88,8 +90,6 @@ def fetch_orders_for_monts(start_date, end_date):
         )
         rows = list(results)
     return rows
-
-
 
 
 def fetch_sum_trudoemkost_for_user(user_id, start_date, end_date):
@@ -124,16 +124,5 @@ def check_buro():
 
     return list_buro
 
-
-
-def new_value():
-    with sqlite3.connect("table.db") as conn:
-        cur = conn.cursor()
-        cur.execute("""
-        UPDATE orders
-        JOIN izdelia_zakaz ON orders.zakaz = izdelia_zakaz.zakaz_izdelie
-        SET orders.izdelie = izdelia_zakaz.name_izdelie""",)
-                    
-        conn.commit()
-        conn.close()
-
+def get_id_buro():
+    pass

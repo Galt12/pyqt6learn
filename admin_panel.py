@@ -1,17 +1,18 @@
-from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QApplication, QCheckBox
+from PyQt6.QtWidgets import QDialog, QTableWidgetItem, QApplication, QCheckBox, QFileDialog, QWidget
 from PyQt6.uic import loadUi
 import sqlite3
 from user_frame import AddNewOrder
 from SqlFile import check_buro, fetch_orders_for_monts
 import sys
 from PyQt6.QtCore import QDate
+import pandas as pd
+import openpyxl
 
 class Admin_frame(QDialog):
     def __init__(self, parent=None):
         super(Admin_frame, self).__init__(parent)
         loadUi("UI_static/admin_franme.ui", self)
         self.setWindowTitle("АДМИНЫ ТУТ")
-
         self.startdate.setDate(QDate.currentDate())
         self.end_date.setDate(QDate.currentDate())
         self.show_work.pressed.connect(self.show_all_works)
@@ -21,6 +22,7 @@ class Admin_frame(QDialog):
         zakaz_list = AddNewOrder.get_zakaz_list(self)
         self.zakazBox.addItems(zakaz_list)
         self.otchet_btn.clicked.connect(self.show_otchet)
+
         buro_name = check_buro()
         for name_buro in buro_name:
             self.type_buro.addItem(name_buro)
@@ -36,11 +38,8 @@ class Admin_frame(QDialog):
             "lz_izv": "ЛЗ ИЗВ",
             "number_lz": "Номер ЛЗ",
             "kol_list": "Кол-во листов",
+            "sum(kol_list)": "Сумм.Кол-во листов"
         }
-
-
-
-
 
     def update_work_or_role(self):
         sender = self.sender()
@@ -97,7 +96,6 @@ class Admin_frame(QDialog):
         self._extracted_tableview_column(results, self.column_mapping, rows)
         conn.close()
 
-
     def _extracted_tableview_column(self, results, column_mapping, rows):
         column_names = [
             column_mapping.get(column[0], column[0]) for column in results.description
@@ -112,6 +110,8 @@ class Admin_frame(QDialog):
 
         sum_kol_list_value = self.sum_kol_list()
         self.sum_trud.setText(str(sum_kol_list_value))
+            
+
 
     def update_work(self):
         """Обновляем записи в БД"""
@@ -178,36 +178,37 @@ class Admin_frame(QDialog):
                     JOIN users u ON o.id_user = u.id
                     JOIN buro b ON u.id_buro = b.id
                     WHERE b.name_buro = ?
-                    AND o.zakaz = ?""", (buro_name, zakaz)
+                    AND o.zakaz = ?""",
+                (buro_name, zakaz),
             )
         rows = list(results)
         self._extracted_tableview_column(results, self.column_mapping, rows)
         conn.close()
 
-
     def show_otchet(self):
         zakaz = self.zakazBox.currentText()
         buro_name = self.type_buro.currentText()
-        date = (QDate.currentDate())
+        id_buro = self.get_id_buro(buro_name)  # Получаем id бюро
+        date = QDate.currentDate()
         first_day = self.startdate.date().toString("yyyy-MM-dd")
         last_day = self.end_date.date().toString("yyyy-MM-dd")
         conn = sqlite3.connect("table.db")
         cur = conn.cursor()
-        selected_columns = self.get_selected_columns(self.column_mapping)
-        if len(selected_columns) != 0:
+        if len(self.get_selected_columns(self.column_mapping)) != 0:
             results = cur.execute(
-                f"SELECT {selected_columns} FROM orders WHERE zakaz = ? AND id_buro = ?", (zakaz, buro_name)
+                f"SELECT {', '.join(self.get_selected_columns(self.column_mapping))} FROM orders WHERE zakaz = ? AND id_buro = ?",
+                (zakaz, id_buro),
             )
         elif first_day != date:
             results = cur.execute(
-            """
+                """
             SELECT zakaz, izdelie, sum(kol_list)
             FROM orders
             WHERE orders.date BETWEEN ? AND ?
             GROUP BY zakaz
             """,
-            (first_day, last_day),
-        )
+                (first_day, last_day),
+            )
         else:
             results = cur.execute(
                 f"SELECT id, zakaz, izdelie, lz_izv, number_lz, kol_list FROM orders WHERE zakaz = ?",
@@ -217,9 +218,25 @@ class Admin_frame(QDialog):
         self._extracted_tableview_column(results, self.column_mapping, rows)
         conn.close()
 
+        self.btn_to_excel.clicked.connect(lambda: self.import_to_excel(results, self.column_mapping, rows))
+
+    def get_id_buro(self, buro_name):
+        conn = sqlite3.connect("table.db")
+        cur = conn.cursor()
+        cur.execute('SELECT id FROM buro WHERE name_buro = ?', (buro_name,))
+        result = cur.fetchone()
+        conn.close()
+        if result:
+            return result[0]
+        else:
+            return None
+
 
     def sum_kol_list(self):
-        header_labels = [self.tableWidget.horizontalHeaderItem(i).text() for i in range(self.tableWidget.columnCount())]
+        header_labels = [
+            self.tableWidget.horizontalHeaderItem(i).text()
+            for i in range(self.tableWidget.columnCount())
+        ]
         column_name = "Кол-во листов"
         if column_name in header_labels:
             kol_list_index = header_labels.index(column_name)
@@ -257,6 +274,30 @@ class Admin_frame(QDialog):
         conn.close()
 
 
+
+    def import_to_excel(self, results, column_mapping, rows):
+        """Импорт в excel как бы """
+        filename, _ = QFileDialog.getSaveFileName(None, "Сохранить файл", "", "Excel Files (*.xlsx)")
+
+        if filename:
+            if not filename.endswith(".xlsx"):
+                filename += ".xlsx"
+
+            wb = openpyxl.Workbook()
+            ws = wb.active
+
+            # Создание заголовков столбцов
+            column_names = [
+                column_mapping.get(column[0], column[0]) for column in results.description
+            ]
+            ws.append(column_names)
+
+            # Заполнение данными
+            for row in rows:
+                ws.append(row)
+
+            # Сохранение в файл
+            wb.save(filename)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

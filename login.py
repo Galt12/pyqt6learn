@@ -4,15 +4,19 @@ from PyQt6.QtWidgets import (
     QDialog,
     QMessageBox,
     QApplication,
+    QWidget,
 )
 from PyQt6.uic import loadUi
 from SqlFile import add_user, check_buro
 from PyQt6.QtSql import QSqlDatabase, QSqlQuery
 from user_frame import AddNewOrder
 from admin_panel import Admin_frame
+from PyQt6.QtCore import pyqtSignal
 
 
-class Login(QDialog):
+class Login(QWidget):
+    login_successful = pyqtSignal(str)  # Сигнал, который передает логин
+
     def __init__(self, parent=None):
         super(Login, self).__init__(parent)
         loadUi("UI_static/login.ui", self)
@@ -23,26 +27,18 @@ class Login(QDialog):
     def login(self):
         login_name = self.login_line.text()
         passw = self.pass_line.text()
-        con = sqlite3.connect("table.db")
-        cur = con.cursor()
+        with sqlite3.connect("table.db") as con:
+            cur = con.cursor()
+            cur.execute("SELECT * FROM users WHERE name = ?;", (login_name,))
+            value = cur.fetchall()
+            if value and value[0][2] == passw:
+                # Если вход успешен, отправляем сигнал
+                self.login_successful.emit(login_name)
+                
+                self.close()
+            else:
+                QMessageBox.warning(self, "Ошибка", "Неверный логин или пароль.")
 
-        cur.execute("SELECT * FROM users WHERE name = ?;", (login_name,))
-        value = cur.fetchall()
-        if value and value[0][2] == passw:
-            role = value[0][4]
-            if role == "user":
-                enter = AddNewOrder(login_name)
-                enter.exec()
-            elif role == "admin":
-                enter = Admin_frame()
-                enter.exec()
-            Login.close(self)
-        else:
-            QMessageBox.warning(self, "Ошибка вышла")
-
-        cur.close()
-        con.close()
-        
     def registration(self):
         Login.close(self)
         reg = Registration()
@@ -59,7 +55,6 @@ class Registration(QDialog):
             self.list_buro.addItem(name_buro)
         self.buttonBox.accepted.connect(self.add_user)
         self.buttonBox.rejected.connect(self.exit_reg)
-
 
     def add_user(self):
         login = self.lineEdit.text()
@@ -96,14 +91,13 @@ class Registration(QDialog):
             user_info = [login, password, id_buro]
             add_user(user_info)
             Registration.close(self)
-            enter = Login()
-            enter.exec()
 
     def exit_reg(self):
         Registration.close(self)
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = Login()
-    window.show()
-    sys.exit(app.exec())
+
+# if __name__ == "__main__":
+#     app = QApplication(sys.argv)
+#     window = Login()
+#     window.show()
+#     sys.exit(app.exec())
